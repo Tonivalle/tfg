@@ -1,11 +1,12 @@
 import datetime
+from pathlib import Path
 
 from tfg.componentes.electrodomestico import Electrodomestico
 from tfg.componentes.vivienda import Vivienda
 
 
 class TestVivienda:
-    def test_can_calculate_consumption(resources: str):
+    def test_can_calculate_consumption(self):
         vivienda = Vivienda(
             electrodomesticos=[
                 Electrodomestico(
@@ -22,7 +23,7 @@ class TestVivienda:
         )
         assert vivienda.calcular_consumo() == 7.5
 
-    def test_can_load_from_yaml(resources: str):
-        vivienda = Vivienda.from_config("./resources/vivienda_ejemplo.yml")
+    def test_can_load_from_yaml(self, resources: Path):
+        vivienda = Vivienda.from_config(resources / "vivienda_ejemplo.yml")
 
         assert len(vivienda.electrodomesticos) == 2
