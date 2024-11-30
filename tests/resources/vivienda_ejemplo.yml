@@ -1,0 +1,6 @@
+electrodomesticos:
+- consumo_kwh: 10
+  nombre: lavadora
+
+- consumo_kwh: 1
+  nombre: nevera
