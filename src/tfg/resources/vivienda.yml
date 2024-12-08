@@ -7,7 +7,9 @@ electrodomesticos:
 
 paneles_solares:
 - tamaño: 5
-  eficiencia: 0.75
+  eficiencia: 0.9
+- tamaño: 10
+  eficiencia: 0.7
 
 baterias:
 - carga_max: 20
