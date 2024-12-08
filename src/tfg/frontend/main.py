@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import streamlit as st
 
 from tfg.componentes.vivienda import Vivienda
@@ -13,11 +14,10 @@ st.set_page_config(
 st.title("Vivienda Solar")
 
 vivienda = Vivienda.from_config(Path(__file__).parent.parent / "resources/vivienda.yml")
-  
+
 disp_vivienda = DisplayVivienda(vivienda)
 
 disp_vivienda.display()
-
 
 
 # x = st.slider('x')  # 👈 this is a widget

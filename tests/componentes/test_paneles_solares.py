@@ -1,4 +1,4 @@
-from tfg.componentes.paneles_solares import PanelSolar
+from tfg.componentes.panel_solar import PanelSolar
 
 
 class TestPanelesSolares:

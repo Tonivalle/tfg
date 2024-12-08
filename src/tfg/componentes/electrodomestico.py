@@ -5,11 +5,11 @@ from pydantic import BaseModel
 
 class Electrodomestico(BaseModel):
     nombre: str
-    consumo_kwh: float
+    potencia: float
     tiempo_uso: datetime.time = datetime.time(hour=0, minute=0)
 
     def calcular_consumo(self) -> float:
-        return self.consumo_kwh * self._horas_uso()
+        return self.potencia * self._horas_uso()
 
     def _horas_uso(self) -> float:
         return (

@@ -1,8 +1,8 @@
 electrodomesticos:
-- consumo_kwh: 10
+- potencia: 2000
   nombre: lavadora
 
-- consumo_kwh: 1
+- potencia: 2500
   nombre: nevera
 
 paneles_solares:
@@ -12,5 +12,7 @@ paneles_solares:
   eficiencia: 0.7
 
 baterias:
-- carga_max: 20
-- carga_max: 20
+- carga_max: 20000
+  carga_actual: 10000
+- carga_max: 20000
+  carga_actual: 2000

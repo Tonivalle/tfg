@@ -1,8 +1,8 @@
 import datetime
 from pathlib import Path
 
-from tfg.componentes.electrodomestico import Electrodomestico
 from tfg.componentes import Vivienda
+from tfg.componentes.electrodomestico import Electrodomestico
 
 
 class TestVivienda:
@@ -11,12 +11,12 @@ class TestVivienda:
             electrodomesticos=[
                 Electrodomestico(
                     nombre="lavadora",
-                    consumo_kwh=10,
+                    potencia=10,
                     tiempo_uso=datetime.time(hour=0, minute=15),
                 ),
                 Electrodomestico(
                     nombre="nevera",
-                    consumo_kwh=1,
+                    potencia=1,
                     tiempo_uso=datetime.time(hour=5, minute=0),
                 ),
             ],
