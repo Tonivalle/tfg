@@ -29,3 +29,4 @@ class TestVivienda:
 
         assert len(vivienda.electrodomesticos) == 2
         assert len(vivienda.paneles_solares) == 1
+        assert len(vivienda.baterias) == 2
