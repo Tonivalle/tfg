@@ -11,16 +11,17 @@ class TestVivienda:
             electrodomesticos=[
                 Electrodomestico(
                     nombre="lavadora",
-                    consumo_kwh=10,
+                    potencia=10,
                     tiempo_uso=datetime.time(hour=0, minute=15),
                 ),
                 Electrodomestico(
                     nombre="nevera",
-                    consumo_kwh=1,
+                    potencia=1,
                     tiempo_uso=datetime.time(hour=5, minute=0),
                 ),
             ],
             paneles_solares=[],
+            baterias=[],
         )
         assert vivienda.calcular_consumo() == 7.5
 

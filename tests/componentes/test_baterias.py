@@ -1,4 +1,4 @@
-from tfg.componentes.baterias import Bateria
+from tfg.componentes.bateria import Bateria
 
 
 class TestBaterias:

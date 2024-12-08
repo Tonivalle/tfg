@@ -1,0 +1,18 @@
+electrodomesticos:
+- potencia: 2000
+  nombre: lavadora
+
+- potencia: 2500
+  nombre: nevera
+
+paneles_solares:
+- tamaño: 5
+  eficiencia: 0.9
+- tamaño: 10
+  eficiencia: 0.7
+
+baterias:
+- carga_max: 20000
+  carga_actual: 10000
+- carga_max: 20000
+  carga_actual: 2000

@@ -5,10 +5,9 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel
 
-from tfg.componentes.baterias import Bateria
-from tfg.componentes.paneles_solares import PanelSolar
-
-from .electrodomestico import Electrodomestico
+from tfg.componentes.bateria import Bateria
+from tfg.componentes.electrodomestico import Electrodomestico
+from tfg.componentes.panel_solar import PanelSolar
 
 
 class Vivienda(BaseModel):

@@ -1,8 +1,8 @@
 electrodomesticos:
-- consumo_kwh: 10
+- potencia: 10
   nombre: lavadora
 
-- consumo_kwh: 1
+- potencia: 1
   nombre: nevera
 
 paneles_solares:
