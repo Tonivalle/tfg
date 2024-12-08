@@ -1,8 +1,8 @@
 import datetime
 from pathlib import Path
 
-from tfg.componentes import Vivienda
 from tfg.componentes.electrodomestico import Electrodomestico
+from tfg.componentes.vivienda import Vivienda
 
 
 class TestVivienda:
@@ -21,6 +21,7 @@ class TestVivienda:
                 ),
             ],
             paneles_solares=[],
+            baterias=[],
         )
         assert vivienda.calcular_consumo() == 7.5
 

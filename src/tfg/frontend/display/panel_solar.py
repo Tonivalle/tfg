@@ -47,4 +47,6 @@ class MockIrradiacionAdapter(IrradiacionAdapter):
         }
 
     def irradiacion(self) -> int:
-        return self.irradiacion_serie.get(datetime.now().hour, 100) # TODO: volver a poner a cero al acabar las pruebas.
+        return self.irradiacion_serie.get(
+            datetime.now().hour, 100
+        )  # TODO: volver a poner a cero al acabar las pruebas.

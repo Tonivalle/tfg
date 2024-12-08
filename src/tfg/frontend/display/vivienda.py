@@ -31,21 +31,27 @@ class DisplayVivienda:
         for dis_electrodomestico in self.dis_electrodomesticos:
             dis_electrodomestico.formatear_fila_componente()
         st.divider()
-        st.markdown(f"#### Consumo Total: {self._consumo_actual()} W")
+        st.markdown(f"##### Consumo Total: {self._consumo_actual()} W")
+        st.divider()
 
     def display_paneles(self):
         st.header(":blue[Paneles Solares]", divider="blue")
         for idx, dis_paneles in enumerate(self.dis_paneles, 1):
             dis_paneles.formatear_fila_componente(idx)
         st.divider()
-        st.markdown(f"#### Batería Total: {self._generacion_actual()} W")
+        st.markdown(f"##### Generación Total: {self._generacion_actual()} W")
+        st.divider()
 
     def display_baterias(self):
         st.header(":green[Baterías]", divider="green")
         for idx, dis_bateria in enumerate(self.dis_baterias, 1):
-            dis_bateria.formatear_fila_componente(id=idx, potencia_actual=(self._generacion_actual()-self._consumo_actual()))
+            dis_bateria.formatear_fila_componente(
+                id=idx,
+                potencia_actual=(self._generacion_actual() - self._consumo_actual()),
+            )
         st.divider()
-        st.markdown(f"#### Batería Total: {self._carga_actual()} Wh")
+        st.markdown(f"##### Batería Total: {self._carga_actual()} Wh")
+        st.divider()
 
     def _consumo_actual(self) -> float:
         return sum(
@@ -57,4 +63,6 @@ class DisplayVivienda:
         return sum(dis_panel.calcular_generacion() for dis_panel in self.dis_paneles)
 
     def _carga_actual(self) -> float:
-        return sum(dis_bateria.bateria.carga_actual for dis_bateria in self.dis_baterias)
+        return sum(
+            dis_bateria.bateria.carga_actual for dis_bateria in self.dis_baterias
+        )
