@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from tfg.componentes.baterias import Bateria
 from tfg.componentes.paneles_solares import PanelSolar
 
-from .electrodomestico import Electrodomestico
+from tfg.componentes.electrodomestico import Electrodomestico
 
 
 class Vivienda(BaseModel):

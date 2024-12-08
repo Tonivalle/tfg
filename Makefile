@@ -37,6 +37,10 @@ type-check: ## Launch the type checking tool
 update: ## Update python dependencies
 	poetry update
 
+.PHONY: run
+run: ## Run streamlit app
+	poetry run streamlit run ./src/tfg/frontend/main.py
+
 .PHONY: help
 help: ## Show the available commands
 	@echo "Available commands:"

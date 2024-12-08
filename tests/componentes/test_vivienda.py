@@ -2,7 +2,7 @@ import datetime
 from pathlib import Path
 
 from tfg.componentes.electrodomestico import Electrodomestico
-from tfg.componentes.vivienda import Vivienda
+from tfg.componentes import Vivienda
 
 
 class TestVivienda:
