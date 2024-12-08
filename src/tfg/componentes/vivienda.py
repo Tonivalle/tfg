@@ -5,11 +5,14 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel
 
+from tfg.componentes.paneles_solares import PanelSolar
+
 from .electrodomestico import Electrodomestico
 
 
 class Vivienda(BaseModel):
     electrodomesticos: list[Electrodomestico]
+    paneles_solares: list[PanelSolar]
 
     def calcular_consumo(self):
         return sum(

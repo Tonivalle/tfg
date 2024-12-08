@@ -19,7 +19,8 @@ class TestVivienda:
                     consumo_kwh=1,
                     tiempo_uso=datetime.time(hour=5, minute=0),
                 ),
-            ]
+            ],
+            paneles_solares=[],
         )
         assert vivienda.calcular_consumo() == 7.5
 
@@ -27,3 +28,4 @@ class TestVivienda:
         vivienda = Vivienda.from_config(resources / "vivienda_ejemplo.yml")
 
         assert len(vivienda.electrodomesticos) == 2
+        assert len(vivienda.paneles_solares) == 1
