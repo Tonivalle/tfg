@@ -4,3 +4,7 @@ electrodomesticos:
 
 - consumo_kwh: 1
   nombre: nevera
+
+paneles_solares:
+- tamaño: 5
+  eficiencia: 0.75
