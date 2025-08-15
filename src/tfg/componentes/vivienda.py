@@ -25,7 +25,7 @@ class Vivienda(BaseModel):
     def calcular_generacion_solar(self, irradiacion: float = 800) -> float:
         """
         Calcula la generación total de los paneles solares.
-        
+
         Args:
             irradiacion: Irradiación solar en W/m² (por defecto 800)
         """
@@ -46,37 +46,42 @@ class Vivienda(BaseModel):
     def calcular_consumo_instantaneo(self) -> float:
         """
         Calcula el consumo instantáneo basado en electrodomésticos activos.
-        
+
         Para esto necesitamos acceder al estado actual desde la sesión de Streamlit
         ya que el estado activo se mantiene en el DisplayElectrodomestico.
         """
         return sum(
-            electrodomestico.potencia if getattr(electrodomestico, '_activo', False)
+            electrodomestico.potencia
+            if getattr(electrodomestico, "_activo", False)
             else 0
             for electrodomestico in self.electrodomesticos
         )
 
-    def distribuir_potencia_baterias(self, potencia_neta: float) -> List[Tuple[Bateria, float]]:
+    def distribuir_potencia_baterias(
+        self, potencia_neta: float
+    ) -> List[Tuple[Bateria, float]]:
         """
         Distribuye la potencia entre las baterías de manera inteligente.
-        
+
         Args:
             potencia_neta: Potencia neta disponible (+ = exceso, - = déficit)
-            
+
         Returns:
             Lista de tuplas (bateria, potencia_asignada)
         """
         distribucion = []
 
         if potencia_neta > 0:
-            if baterias_disponibles := [
-                b for b in self.baterias if not b.esta_cargada
-            ]:
-                capacidades_disponibles = [b.capacidad_carga_disponible() for b in baterias_disponibles]
+            if baterias_disponibles := [b for b in self.baterias if not b.esta_cargada]:
+                capacidades_disponibles = [
+                    b.capacidad_carga_disponible() for b in baterias_disponibles
+                ]
                 total_capacidad = sum(capacidades_disponibles)
 
                 if total_capacidad > 0:
-                    for bateria, capacidad in zip(baterias_disponibles, capacidades_disponibles):
+                    for bateria, capacidad in zip(
+                        baterias_disponibles, capacidades_disponibles
+                    ):
                         proporcion = capacidad / total_capacidad
                         potencia_asignada = potencia_neta * proporcion
                         distribucion.append((bateria, potencia_asignada))
@@ -94,7 +99,7 @@ class Vivienda(BaseModel):
                 if total_carga > 0:
                     for bateria, carga in zip(baterias_disponibles, cargas_actuales):
                         proporcion = carga / total_carga
-                        potencia_asignada = potencia_neta * proporcion 
+                        potencia_asignada = potencia_neta * proporcion
                         distribucion.append((bateria, potencia_asignada))
                         bateria.actualizar_carga(potencia_asignada)
 

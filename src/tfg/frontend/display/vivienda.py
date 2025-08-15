@@ -18,7 +18,8 @@ class DisplayVivienda:
             for panel in self.vivienda.paneles_solares
         ]
         self.dis_baterias = [
-            DisplayBateria(bateria, index) for index, bateria in enumerate(self.vivienda.baterias)
+            DisplayBateria(bateria, index)
+            for index, bateria in enumerate(self.vivienda.baterias)
         ]
 
     def display(self):
@@ -46,33 +47,45 @@ class DisplayVivienda:
     def display_balance_energetico(self):
         """Muestra el balance energético del sistema"""
         st.header(":violet[Balance Energético]", divider="violet")
-        
+
         generacion = self._generacion_actual()
         consumo = self._consumo_actual()
         balance = generacion - consumo
-        
+
         col1, col2, col3 = st.columns(3)
-        
+
         with col1:
-            st.metric("🌞 Generación", f"{generacion:.1f} W", help="Energía generada por paneles solares")
-        
+            st.metric(
+                "🌞 Generación",
+                f"{generacion:.1f} W",
+                help="Energía generada por paneles solares",
+            )
+
         with col2:
-            st.metric("⚡ Consumo", f"{consumo:.1f} W", help="Energía consumida por electrodomésticos")
-        
+            st.metric(
+                "⚡ Consumo",
+                f"{consumo:.1f} W",
+                help="Energía consumida por electrodomésticos",
+            )
+
         with col3:
             if balance > 0:
-                st.metric("🔋 Balance", f"+{balance:.1f} W", 
-                         help="Exceso de energía - Las baterías se cargan", 
-                         delta="Exceso")
+                st.metric(
+                    "🔋 Balance",
+                    f"+{balance:.1f} W",
+                    help="Exceso de energía - Las baterías se cargan",
+                    delta="Exceso",
+                )
             elif balance < 0:
-                st.metric("🔋 Balance", f"{balance:.1f} W", 
-                         help="Déficit de energía - Las baterías se descargan", 
-                         delta="Déficit")
+                st.metric(
+                    "🔋 Balance",
+                    f"{balance:.1f} W",
+                    help="Déficit de energía - Las baterías se descargan",
+                    delta="-Déficit",
+                )
             else:
-                st.metric("🔋 Balance", "0 W", 
-                         help="Equilibrio perfecto", 
-                         delta="Equilibrio")
-        
+                st.metric("🔋 Balance", "0 W", help="Equilibrio perfecto", delta=None)
+
         st.divider()
 
     def display_baterias(self):

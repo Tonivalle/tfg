@@ -7,7 +7,9 @@ from pydantic import BaseModel, Field, PrivateAttr
 class Electrodomestico(BaseModel):
     nombre: str
     potencia: float
-    tiempo_uso: datetime.timedelta = Field(default_factory=lambda: datetime.timedelta(0))
+    tiempo_uso: datetime.timedelta = Field(
+        default_factory=lambda: datetime.timedelta(0)
+    )
 
     _inicio_uso: Optional[datetime.datetime] = PrivateAttr(default=None)
     _activo: bool = PrivateAttr(default=False)
@@ -22,11 +24,11 @@ class Electrodomestico(BaseModel):
     def get_tiempo_uso_total(self) -> datetime.timedelta:
         """Obtiene el tiempo de uso total incluyendo el tiempo actual si está activo"""
         tiempo_acumulado = self.tiempo_uso
-        
+
         if self._activo and self._inicio_uso:
             tiempo_actual = datetime.datetime.now() - self._inicio_uso
             tiempo_acumulado += tiempo_actual
-            
+
         return tiempo_acumulado
 
     def iniciar_uso(self):

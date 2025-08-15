@@ -17,16 +17,16 @@ class TestElectrodomestico:
             nombre="lavadora",
             potencia=10,
         )
-        
+
         assert not electrodomestico.activo
         assert electrodomestico.get_tiempo_uso_total() == datetime.timedelta(0)
-        
+
         electrodomestico.iniciar_uso()
         assert electrodomestico.activo
-        
+
         electrodomestico.detener_uso()
         assert not electrodomestico.activo
-        
+
         assert electrodomestico.tiempo_uso > datetime.timedelta(0)
 
     def test_multiple_usage_sessions_accumulate(self):
@@ -35,8 +35,8 @@ class TestElectrodomestico:
             potencia=10,
             tiempo_uso=datetime.timedelta(minutes=10),
         )
-        
+
         electrodomestico.iniciar_uso()
         electrodomestico.detener_uso()
-        
+
         assert electrodomestico.tiempo_uso > datetime.timedelta(minutes=10)
