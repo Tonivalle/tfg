@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 
 import streamlit as st
 
@@ -8,7 +9,6 @@ from tfg.frontend.display.vivienda import DisplayVivienda
 st.set_page_config(
     page_title="Paneles Solares",
     page_icon="",
-    # layout="wide",
 )
 
 st.title("Vivienda Solar")
@@ -19,10 +19,11 @@ disp_vivienda = DisplayVivienda(vivienda)
 
 disp_vivienda.display()
 
+any_active = any(
+    st.session_state.get(f"electrodomestico_{e.nombre}", {}).get("activo", False)
+    for e in vivienda.electrodomesticos
+)
 
-# x = st.slider('x')  # 👈 this is a widget
-# st.write(x, 'squared is', x * x)
-
-# my_bar = st.progress(30, text="Cargando")
-
-# on = st.toggle("Activar")
+if any_active:
+    time.sleep(1)
+    st.rerun()

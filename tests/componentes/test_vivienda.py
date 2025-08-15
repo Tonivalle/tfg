@@ -12,12 +12,12 @@ class TestVivienda:
                 Electrodomestico(
                     nombre="lavadora",
                     potencia=10,
-                    tiempo_uso=datetime.time(hour=0, minute=15),
+                    tiempo_uso=datetime.timedelta(minutes=15),
                 ),
                 Electrodomestico(
                     nombre="nevera",
                     potencia=1,
-                    tiempo_uso=datetime.time(hour=5, minute=0),
+                    tiempo_uso=datetime.timedelta(hours=5),
                 ),
             ],
             paneles_solares=[],
