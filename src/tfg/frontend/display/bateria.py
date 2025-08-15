@@ -1,4 +1,5 @@
 from datetime import timedelta
+import datetime
 
 import streamlit as st
 
@@ -6,55 +7,99 @@ from tfg.componentes.bateria import Bateria
 
 
 class DisplayBateria:
-    def __init__(self, bateria: Bateria) -> None:
+    def __init__(self, bateria: Bateria, index: int = 0) -> None:
         self.bateria = bateria
+        self.index = index
 
-    def formatear_fila_componente(self, id: int, potencia_actual: float = 0):
-        st.subheader(f"Batería {id}: {self.bateria.carga_actual} Wh")
-        texto = self._formatear_texto(potencia_actual)
+        self.session_key = f"bateria_{self.index}"
+        
+        if self.session_key not in st.session_state:
+            st.session_state[self.session_key] = {
+                "carga_actual": self.bateria.carga_actual,
+                "ultimo_update": datetime.datetime.now(),
+                "potencia_actual": 0.0
+            }
+        else:
+            self.bateria.carga_actual = st.session_state[self.session_key]["carga_actual"]
+
+    def actualizar_bateria_tiempo_real(self, potencia_asignada: float):
+        """
+        Actualiza la batería en tiempo real basada en la potencia asignada.
+        """
+        ahora = datetime.datetime.now()
+        session_data = st.session_state[self.session_key]
+        
+        tiempo_transcurrido = ahora - session_data["ultimo_update"]
+        horas = tiempo_transcurrido.total_seconds() / 3600
+        
+        if "potencia_actual" in session_data and horas > 0:
+            cambio_carga = session_data["potencia_actual"] * horas
+            nueva_carga = self.bateria.carga_actual + cambio_carga
+            
+            self.bateria.carga_actual = max(0, min(self.bateria.carga_max, nueva_carga))
+            
+            session_data["carga_actual"] = self.bateria.carga_actual
+        
+        session_data["ultimo_update"] = ahora
+        session_data["potencia_actual"] = potencia_asignada
+
+    def formatear_fila_componente(self, id: int, potencia_asignada: float = 0):
+        self.actualizar_bateria_tiempo_real(potencia_asignada)
+        
+        st.subheader(f"Batería {id}: {self.bateria.carga_actual:.1f} Wh")
+        texto = self._formatear_texto(potencia_asignada)
         st.progress(self.bateria.porcentaje, text=texto)
+        
+        st.session_state[self.session_key]["carga_actual"] = self.bateria.carga_actual
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write(f"🔋 Capacidad: {self.bateria.carga_max} Wh")
+            st.write(f"📊 Porcentaje: {self.bateria.porcentaje:.1%}")
+        with col2:
+            if potencia_asignada > 0:
+                st.write("🟢 **Cargando**")
+                st.write(f"⚡ Potencia: +{potencia_asignada:.1f} W")
+            elif potencia_asignada < 0:
+                st.write("🔴 **Descargando**")
+                st.write(f"⚡ Potencia: {potencia_asignada:.1f} W")
+            else:
+                st.write("⏸️ **En espera**")
+                st.write("⚡ Potencia: 0 W")
 
     def _formatear_texto(self, potencia_actual: float) -> str:
-        if self.bateria.porcentaje == 1:
-            return "Cargado por completo."
+        if self.bateria.esta_cargada:
+            return "✅ Cargado por completo."
+        
         if potencia_actual > 0:
-            return f"Cargando... Tiempo hasta carga completa: {self._estimar_tiempo_carga(potencia_actual)}"  # TODO: si se tienen multiples baterías, la potencia se debería dividir entre ellas.
+            tiempo_carga = self.bateria.tiempo_hasta_carga_completa(potencia_actual)
+            if tiempo_carga:
+                return f"🔋 Cargando... {self._formatear_tiempo(tiempo_carga)} hasta carga completa"
+            return "🔋 Cargando..."
+        
         if potencia_actual < 0:
-            return f"Consumiendo energía. Tiempo hasta descarga: {self._estimar_tiempo_descarga(potencia_actual)}"
-        return "Batería en espera."
+            tiempo_descarga = self.bateria.tiempo_hasta_descarga_completa(abs(potencia_actual))
+            if tiempo_descarga:
+                return f"⚡ Descargando... {self._formatear_tiempo(tiempo_descarga)} hasta descarga"
+            return "⚡ Descargando..."
+        
+        if self.bateria.esta_descargada:
+            return "❌ Batería descargada."
+        
+        return "⏸️ Batería en espera."
 
-    def calcular_reservas(self) -> float:
-        return self.bateria.porcentaje
-
-    def _estimar_tiempo_carga(
-        self, potencia: float
-    ) -> timedelta:  # TODO Mover al componente batería
+    def _formatear_tiempo(self, tiempo: timedelta) -> str:
         """
-        Ecuación: Tiempo carga (h) = Capacidad batería restante (Wh) / Potencia Carga (W)
+        Formatea un timedelta a una cadena legible.
         """
-        if potencia > 0:
-            return _formatear_horas_a_string(
-                (self.bateria.carga_max - self.bateria.carga_actual) / potencia
-            )
-        raise ValueError("Potencia debe ser mayor que 0.")
-
-    def _estimar_tiempo_descarga(
-        self, potencia: float
-    ) -> timedelta:  # TODO Mover al componente batería
-        """
-        Ecuación: Tiempo descarga (h) = Capacidad actual (Wh) / Potencia Carga (W)
-        """
-        if potencia < 0:
-            return _formatear_horas_a_string(self.bateria.carga_actual / -potencia)
-        raise ValueError("Potencia debe ser menor que 0.")
-
-
-def _formatear_horas_a_string(horas: float) -> timedelta:
-    """
-    Formateamos a formato timedelta.
-
-    Le restamos los microsegundos para simplificar la lectura.
-    """
-    return timedelta(hours=horas) - timedelta(
-        microseconds=timedelta(hours=horas).microseconds
-    )
+        total_seconds = int(tiempo.total_seconds())
+        horas = total_seconds // 3600
+        minutos = (total_seconds % 3600) // 60
+        segundos = total_seconds % 60
+        
+        if horas > 0:
+            return f"{horas:02d}h {minutos:02d}m {segundos:02d}s"
+        elif minutos > 0:
+            return f"{minutos:02d}m {segundos:02d}s"
+        else:
+            return f"{segundos:02d}s"
